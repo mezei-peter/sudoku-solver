@@ -5,15 +5,13 @@ use logic::arguments_service::ArgsService;
 use crate::logic::arguments_service::ArgsServiceImpl;
 
 mod logic {
-    pub mod puzzle_solver;
     pub mod arguments_service;
+    pub mod puzzle_solver;
 }
 mod model {
     pub mod puzzle;
 }
-mod ui {
-
-}
+mod ui {}
 
 fn main() {
     let args: Vec<String> = env::args().collect();

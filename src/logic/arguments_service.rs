@@ -1,11 +1,16 @@
-pub struct ArgumentsService;
+pub trait ArgsService {
+    fn new() -> Self;
+    fn process(&self, args: &Vec<String>);
+}
 
-impl ArgumentsService {
-    pub fn new() -> ArgumentsService {
-        ArgumentsService
+pub struct ArgsServiceImpl;
+
+impl ArgsService for ArgsServiceImpl {
+    fn new() -> ArgsServiceImpl {
+        ArgsServiceImpl
     }
 
-    pub fn process(&self, args: &Vec<String>) {
+    fn process(&self, args: &Vec<String>) {
         let first: &String = &args[1];
         println!("{}", first);
     }

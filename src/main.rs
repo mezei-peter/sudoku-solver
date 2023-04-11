@@ -1,6 +1,8 @@
 use std::env;
 
-use crate::logic::arguments_service::ArgumentsService;
+use logic::arguments_service::ArgsService;
+
+use crate::logic::arguments_service::ArgsServiceImpl;
 
 mod logic {
     pub mod puzzle_solver;
@@ -15,6 +17,6 @@ mod ui {
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    let arg_service: ArgumentsService = ArgumentsService::new();
+    let arg_service = ArgsServiceImpl::new();
     arg_service.process(&args);
 }

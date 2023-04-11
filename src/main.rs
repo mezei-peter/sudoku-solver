@@ -1,3 +1,5 @@
+use std::env;
+
 mod logic {
     pub mod puzzle_solver;
 }
@@ -9,5 +11,9 @@ mod ui {
 }
 
 fn main() {
-    println!("Hello, world!");
+    let args: Vec<String> = env::args().collect();
+
+    let first: &String = &args[1];
+
+    println!("{}", first);
 }

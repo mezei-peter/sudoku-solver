@@ -27,40 +27,7 @@ impl ArgsServiceImpl {
         if self.invalidate_file(&file_path, &content) {
             return;
         }
-        let puzzles: Vec<Puzzle> = self.parse_puzzle_file(&content);
-    }
-
-    fn parse_puzzle_file(&self, content: &String) -> Vec<Puzzle> {
-        println!("Parsing file...");
-        let mut puzzles: Vec<Puzzle> = Vec::new();
-        let lines = content.lines();
-        for line in lines.into_iter() {
-            let puzzle: Puzzle = self.parse_puzzle_line(&line);
-            puzzles.push(puzzle);
-        }
-        println!("Parse successful.");
-        puzzles
-    }
-
-    fn parse_puzzle_line(&self, line: &str) -> Puzzle {
-        let mut puzzle_matrix: Vec<Vec<char>> = Vec::new();
-        for _i in 0..self.default_grid_size {
-            puzzle_matrix.push(Vec::<char>::new());
-        }
-
-        let mut position: u16 = 0;
-        let mut row: u8 = 0;
-        while position < line.chars().count() as u16 {
-            let character: char = line.chars().nth(position as usize).unwrap();
-            puzzle_matrix[row as usize].push(character);
-
-            position += 1;
-            if position % self.default_grid_size as u16 == 0 {
-                row += 1;
-            }
-        }
-
-        Puzzle::new(self.default_grid_size, puzzle_matrix)
+        let puzzles: Vec<Puzzle> = self.puzzle_parser.parse_puzzle_file(&content);
     }
 
     fn invalidate_file(&self, file_path: &String, content: &String) -> bool {

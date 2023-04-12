@@ -9,11 +9,13 @@ pub struct PuzzleParserImpl {
     default_grid_size: u8,
 }
 
-impl PuzzleParser for PuzzleParserImpl {
-    fn new(default_grid_size: u8) -> PuzzleParserImpl {
+impl PuzzleParserImpl {
+    pub fn new(default_grid_size: u8) -> PuzzleParserImpl {
         PuzzleParserImpl { default_grid_size }
     }
+}
 
+impl PuzzleParser for PuzzleParserImpl {
     fn parse_puzzle_file(&self, content: &String) -> Vec<Puzzle> {
         println!("Parsing file...");
         let mut puzzles: Vec<Puzzle> = Vec::new();

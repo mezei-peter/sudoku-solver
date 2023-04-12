@@ -3,7 +3,6 @@ use std::fs;
 use crate::model::puzzle::Puzzle;
 
 pub trait ArgsService {
-    fn new() -> Self;
     fn process(&self, args: &Vec<String>);
 }
 
@@ -12,6 +11,12 @@ pub struct ArgsServiceImpl {
 }
 
 impl ArgsServiceImpl {
+    pub fn new() -> ArgsServiceImpl {
+        ArgsServiceImpl {
+            defaul_grid_size: 9,
+        }
+    }
+
     fn handle_file_arg(&self, file_path: &String) {
         let content =
             fs::read_to_string(file_path).expect(&format!("{} - Invalid file path", file_path));
@@ -72,12 +77,6 @@ impl ArgsServiceImpl {
 }
 
 impl ArgsService for ArgsServiceImpl {
-    fn new() -> ArgsServiceImpl {
-        ArgsServiceImpl {
-            defaul_grid_size: 9,
-        }
-    }
-
     fn process(&self, args: &Vec<String>) {
         for i in 1..args.len() {
             if args[i].starts_with("--") {

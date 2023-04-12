@@ -1,7 +1,6 @@
 use crate::model::puzzle::Puzzle;
 
 pub trait PuzzleParser {
-    fn new(default_grid_size: u8) -> Self;
     fn parse_puzzle_file(&self, content: &String) -> Vec<Puzzle>;
     fn parse_puzzle(&self, data: &str) -> Puzzle;
 }

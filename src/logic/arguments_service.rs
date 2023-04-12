@@ -2,18 +2,22 @@ use std::fs;
 
 use crate::model::puzzle::Puzzle;
 
+use super::puzzle_parser::PuzzleParser;
+
 pub trait ArgsService {
     fn process(&self, args: &Vec<String>);
 }
 
 pub struct ArgsServiceImpl {
-    defaul_grid_size: u8,
+    puzzle_parser: Box<dyn PuzzleParser>,
+    default_grid_size: u8,
 }
 
 impl ArgsServiceImpl {
-    pub fn new() -> ArgsServiceImpl {
+    pub fn new(puzzle_parser: Box<dyn PuzzleParser>, default_grid_size: u8) -> ArgsServiceImpl {
         ArgsServiceImpl {
-            defaul_grid_size: 9,
+            puzzle_parser,
+            default_grid_size,
         }
     }
 
@@ -40,7 +44,7 @@ impl ArgsServiceImpl {
 
     fn parse_puzzle_line(&self, line: &str) -> Puzzle {
         let mut puzzle_matrix: Vec<Vec<char>> = Vec::new();
-        for _i in 0..self.defaul_grid_size {
+        for _i in 0..self.default_grid_size {
             puzzle_matrix.push(Vec::<char>::new());
         }
 
@@ -51,12 +55,12 @@ impl ArgsServiceImpl {
             puzzle_matrix[row as usize].push(character);
 
             position += 1;
-            if position % self.defaul_grid_size as u16 == 0 {
+            if position % self.default_grid_size as u16 == 0 {
                 row += 1;
             }
         }
 
-        Puzzle::new(self.defaul_grid_size, puzzle_matrix)
+        Puzzle::new(self.default_grid_size, puzzle_matrix)
     }
 
     fn invalidate_file(&self, file_path: &String, content: &String) -> bool {
@@ -65,7 +69,7 @@ impl ArgsServiceImpl {
             return true;
         }
         if content.lines().count() == 1 {
-            if self.defaul_grid_size.pow(2) as usize != content.chars().count() {
+            if self.default_grid_size.pow(2) as usize != content.chars().count() {
                 println!("Corrupted file data: length of lines are wrong.");
                 return true;
             }

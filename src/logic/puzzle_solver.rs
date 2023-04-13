@@ -8,7 +8,9 @@ pub trait PuzzleSolver {
 pub struct SudokuSolver;
 
 impl SudokuSolver {
-
+    pub fn new() -> SudokuSolver {
+        SudokuSolver {}
+    }
 }
 
 impl PuzzleSolver for SudokuSolver {
@@ -17,6 +19,6 @@ impl PuzzleSolver for SudokuSolver {
     }
 
     fn solve_all_puzzles(&self, puzzles: Vec<Puzzle>) -> Vec<Puzzle> {
-        todo!()
+        puzzles
     }
 }

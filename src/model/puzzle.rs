@@ -1,5 +1,6 @@
 use std::vec::Vec;
 
+#[derive(Debug)]
 pub struct Puzzle {
     grid_size: u8,
     matrix: Vec<Vec<char>>

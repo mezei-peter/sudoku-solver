@@ -2,7 +2,7 @@ use std::fs;
 
 use crate::model::puzzle::Puzzle;
 
-use super::puzzle_parser::PuzzleParser;
+use super::{puzzle_parser::PuzzleParser, puzzle_solver::{PuzzleSolver, self}};
 
 pub trait ArgsService {
     fn process(&self, args: &Vec<String>);
@@ -10,13 +10,19 @@ pub trait ArgsService {
 
 pub struct ArgsServiceImpl {
     puzzle_parser: Box<dyn PuzzleParser>,
+    puzzle_solver: Box<dyn PuzzleSolver>,
     default_grid_size: u8,
 }
 
 impl ArgsServiceImpl {
-    pub fn new(puzzle_parser: Box<dyn PuzzleParser>, default_grid_size: u8) -> ArgsServiceImpl {
+    pub fn new(
+        puzzle_parser: Box<dyn PuzzleParser>,
+        puzzle_solver: Box<dyn PuzzleSolver>,
+        default_grid_size: u8,
+    ) -> ArgsServiceImpl {
         ArgsServiceImpl {
             puzzle_parser,
+            puzzle_solver,
             default_grid_size,
         }
     }
@@ -28,6 +34,8 @@ impl ArgsServiceImpl {
             return;
         }
         let puzzles: Vec<Puzzle> = self.puzzle_parser.parse_puzzle_file(&content);
+        let solved_puzzles: Vec<Puzzle> = self.puzzle_solver.solve_all_puzzles(puzzles);
+        println!("{:?}", solved_puzzles);
     }
 
     fn invalidate_file(&self, file_path: &String, content: &String) -> bool {

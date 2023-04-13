@@ -16,8 +16,6 @@ impl SudokuSolver {
 impl PuzzleSolver for SudokuSolver {
     fn solve_puzzle(&self, puzzle: &Puzzle) -> Puzzle {
         let puzzle: Puzzle = puzzle.clone();
-        let mut matrix: Vec<Vec<Cell>> = puzzle.map_to_cell_matrix();
-        println!("{:?}", matrix);
 
         puzzle
     }

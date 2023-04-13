@@ -5,26 +5,18 @@ use crate::model::cell::Cell;
 #[derive(Debug)]
 pub struct Puzzle {
     grid_size: u8,
-    matrix: Vec<Vec<char>>,
+    matrix: Vec<Vec<Cell>>,
 }
 
 impl Puzzle {
-    pub fn new(grid_size: u8, matrix: Vec<Vec<char>>) -> Puzzle {
+    pub fn new(grid_size: u8, matrix: Vec<Vec<Cell>>) -> Puzzle {
         Puzzle { grid_size, matrix }
     }
 
-    pub fn clone(&self) -> Puzzle {
-        Puzzle::new(self.grid_size, self.matrix.to_vec())
-    }
+}
 
-    pub fn map_to_cell_matrix(&self) -> Vec<Vec<Cell>> {
-        self.matrix
-            .iter()
-            .map(|row| row
-                .iter()
-                .map(|ch: &char| Cell::new(ch.clone(), if *ch == '0' { false } else { true }))
-                .collect()
-            )
-            .collect()
+impl Clone for Puzzle {
+    fn clone(&self) -> Puzzle {
+        Puzzle::new(self.grid_size.clone(), self.matrix.clone())
     }
 }

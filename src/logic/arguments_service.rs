@@ -1,6 +1,6 @@
 use std::fs;
 
-use crate::model::puzzle::Puzzle;
+use crate::model::puzzle::{Puzzle, self};
 
 use super::{puzzle_parser::PuzzleParser, puzzle_solver::{PuzzleSolver, self}};
 
@@ -34,7 +34,7 @@ impl ArgsServiceImpl {
             return;
         }
         let puzzles: Vec<Puzzle> = self.puzzle_parser.parse_puzzle_file(&content);
-        let solved_puzzles: Vec<Puzzle> = self.puzzle_solver.solve_all_puzzles(puzzles);
+        let solved_puzzles: Vec<Puzzle> = self.puzzle_solver.solve_all_puzzles(&puzzles);
         println!("{:?}", solved_puzzles);
     }
 

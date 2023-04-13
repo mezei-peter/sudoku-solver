@@ -1,4 +1,4 @@
-use crate::model::{puzzle::Puzzle, cell::Cell};
+use crate::model::{cell::Cell, puzzle::Puzzle};
 
 pub trait PuzzleSolver {
     fn solve_puzzle(&self, puzzle: &Puzzle) -> Puzzle;
@@ -11,12 +11,20 @@ impl SudokuSolver {
     pub fn new() -> SudokuSolver {
         SudokuSolver {}
     }
+
+    fn brute_force_puzzle(&self, puzzle: &mut Puzzle) {
+        while let next_cell_res = puzzle.next_cell() {
+            if next_cell_res.is_err() {break;}
+            let mut next_cell: &mut Cell = next_cell_res.unwrap();
+            dbg!("{:?}", next_cell);
+        }
+    }
 }
 
 impl PuzzleSolver for SudokuSolver {
     fn solve_puzzle(&self, puzzle: &Puzzle) -> Puzzle {
-        let puzzle: Puzzle = puzzle.clone();
-
+        let mut puzzle: Puzzle = puzzle.clone();
+        self.brute_force_puzzle(&mut puzzle);
         puzzle
     }
 

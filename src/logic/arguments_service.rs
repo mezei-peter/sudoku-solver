@@ -32,7 +32,7 @@ impl ArgsServiceImpl {
         }
         let puzzles: Vec<Puzzle> = self.puzzle_parser.parse_puzzle_file(&content);
         let solved_puzzles: Vec<Puzzle> = self.puzzle_solver.solve_all_puzzles(&puzzles);
-        dbg!("{:?}", solved_puzzles);
+        //dbg!("{:?}", solved_puzzles);
     }
 
     fn invalidate_file(&self, file_path: &String, content: &String) -> bool {

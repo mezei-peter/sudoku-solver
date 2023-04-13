@@ -9,6 +9,9 @@ impl Cell {
         Cell { value, prescribed }
     }
 
+    pub fn is_empty(&self) -> bool {
+        self.value == '0'
+    }
 }
 
 impl Clone for Cell {

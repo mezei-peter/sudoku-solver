@@ -1,6 +1,6 @@
 use std::fs;
 
-use crate::model::puzzle::{Puzzle, self};
+use crate::model::{puzzle::{Puzzle, self}, default_puzzle_properties::DefaultProps};
 
 use super::{puzzle_parser::PuzzleParser, puzzle_solver::{PuzzleSolver, self}};
 
@@ -11,19 +11,16 @@ pub trait ArgsService {
 pub struct ArgsServiceImpl {
     puzzle_parser: Box<dyn PuzzleParser>,
     puzzle_solver: Box<dyn PuzzleSolver>,
-    default_grid_size: u8,
 }
 
 impl ArgsServiceImpl {
     pub fn new(
         puzzle_parser: Box<dyn PuzzleParser>,
         puzzle_solver: Box<dyn PuzzleSolver>,
-        default_grid_size: u8,
     ) -> ArgsServiceImpl {
         ArgsServiceImpl {
             puzzle_parser,
             puzzle_solver,
-            default_grid_size,
         }
     }
 
@@ -44,7 +41,7 @@ impl ArgsServiceImpl {
             return true;
         }
         if content.lines().count() == 1 {
-            if self.default_grid_size.pow(2) as usize != content.chars().count() {
+            if DefaultProps::GRID_SIZE.pow(2) as usize != content.chars().count() {
                 println!("Corrupted file data: length of lines are wrong.");
                 return true;
             }

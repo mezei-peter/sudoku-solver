@@ -9,6 +9,7 @@ pub struct Puzzle {
     current_x: u8,
     current_y: u8,
     initial_pos: bool,
+    end_pos: bool,
 }
 
 impl Puzzle {
@@ -19,6 +20,7 @@ impl Puzzle {
             current_x: 0,
             current_y: 0,
             initial_pos: true,
+            end_pos: false
         }
     }
 
@@ -36,10 +38,50 @@ impl Puzzle {
         }
 
         if self.current_x == self.grid_size {
+            self.current_x = self.grid_size - 1;
+            self.current_y = self.grid_size - 1;
+            self.end_pos = true;
             return Err(());
         }
 
         Ok(&mut self.matrix[self.current_x as usize][self.current_y as usize])
+    }
+
+    pub fn previous_cell(&mut self) -> Result<&mut Cell, ()> {
+        if self.end_pos {
+            self.end_pos = false;
+            return Ok(&mut self.matrix[self.grid_size as usize - 1][self.grid_size as usize - 1]);
+        }
+
+        if self.initial_pos {
+            return Err(());
+        }
+
+        if self.current_y == 0 {
+            self.current_x = self.current_x - 1;
+            self.current_y = self.grid_size - 1;
+        } else {
+            self.current_y = self.current_y - 1;
+            if self.current_y == 0 && self.current_x == 0 {
+                self.initial_pos = true;
+            }
+        }
+
+        Ok(&mut self.matrix[self.current_x as usize][self.current_y as usize])
+    }
+
+    pub fn reset_initial_pos(&mut self) {
+        self.current_x = 0;
+        self.current_y = 0;
+        self.initial_pos = true;
+        self.end_pos = false;
+    }
+
+    pub fn reset_end_pos(&mut self) {
+        self.current_x = self.grid_size - 1;
+        self.current_y = self.grid_size - 1;
+        self.end_pos = true;
+        self.initial_pos = false;
     }
 }
 

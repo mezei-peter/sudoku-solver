@@ -54,7 +54,7 @@ impl SudokuSolver {
                 (x, y) = next_res.unwrap();
                 is_forward = true;
             } else {
-                let prev_res = self.prevoius_position(x, y, bound);
+                let prev_res = self.previous_position(x, y, bound);
                 if prev_res.is_err() {
                     break;
                 }
@@ -75,7 +75,7 @@ impl SudokuSolver {
         Ok((x + 1, y))
     }
 
-    fn prevoius_position(&self, x: usize, y: usize, bound: u8) -> Result<(usize, usize), ()> {
+    fn previous_position(&self, x: usize, y: usize, bound: u8) -> Result<(usize, usize), ()> {
         if x == 0 && y == 0 {
             return Err(());
         }

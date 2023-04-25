@@ -68,10 +68,10 @@ impl SudokuSolver {
     }
 
     fn next_position(&self, x: usize, y: usize, bound: u8) -> Result<(usize, usize), ()> {
-        if x as u8 == bound && y as u8 == bound {
+        if x as u8 == bound - 1 && y as u8 == bound - 1 {
             return Err(());
         }
-        if x as u8 == bound {
+        if x as u8 == bound - 1 {
             return Ok((0, y + 1));
         }
         Ok((x + 1, y))

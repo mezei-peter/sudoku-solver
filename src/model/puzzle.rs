@@ -118,15 +118,15 @@ impl Puzzle {
 }
 
 fn once_in_subgrid(position: usize, value: char) -> bool {
-    false
+    true
 }
 
 fn once_in_column(position: usize, value: char) -> bool {
-    false
+    true
 }
 
 fn once_in_row(position: usize, value: char) -> bool {
-    false
+    true
 }
 
 impl Clone for Puzzle {

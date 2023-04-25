@@ -111,22 +111,22 @@ impl Puzzle {
     }
 
     pub fn valid_value_at_position(&self, value: char, position: (u8, u8)) -> bool {
-        once_in_row(position.0 as usize, value)
-            && once_in_column(position.0 as usize, value)
-            && once_in_subgrid(position.0 as usize, value)
+        self.once_in_row(position.0 as usize, value)
+            && self.once_in_column(position.0 as usize, value)
+            && self.once_in_subgrid(position.0 as usize, value)
     }
-}
 
-fn once_in_subgrid(position: usize, value: char) -> bool {
-    true
-}
+    fn once_in_row(&self, position: usize, value: char) -> bool {
+        true
+    }
 
-fn once_in_column(position: usize, value: char) -> bool {
-    true
-}
+    fn once_in_column(&self, position: usize, value: char) -> bool {
+        true
+    }
 
-fn once_in_row(position: usize, value: char) -> bool {
-    true
+    fn once_in_subgrid(&self, position: usize, value: char) -> bool {
+        true
+    }
 }
 
 impl Clone for Puzzle {

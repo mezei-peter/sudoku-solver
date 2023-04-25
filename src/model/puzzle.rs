@@ -83,6 +83,10 @@ impl Puzzle {
         self.end_pos = true;
         self.initial_pos = false;
     }
+
+    pub fn accept_cell(&self, cell: &Cell) -> bool {
+        false
+    }
 }
 
 impl Clone for Puzzle {

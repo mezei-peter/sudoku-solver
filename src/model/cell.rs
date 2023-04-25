@@ -25,9 +25,16 @@ impl Cell {
             return Err(());
         }
 
-        let new_value: char = char::from_u32(original + 1).unwrap();
-        self.value = char::from_u32(original + 1).unwrap();
-        Ok(new_value)
+        self.value = char::from_digit(original + 1, 10).unwrap() as char;
+        Ok(self.value)
+    }
+
+    pub fn get_value(&self) -> char {
+        self.value
+    }
+
+    pub fn reset_value(&mut self) {
+        self.value = '0';
     }
 }
 

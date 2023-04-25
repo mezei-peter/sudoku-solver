@@ -1,4 +1,8 @@
-use crate::model::{cell::Cell, puzzle::Puzzle};
+use crate::model::{
+    cell::{self, Cell},
+    default_puzzle_properties::DefaultProps,
+    puzzle::Puzzle,
+};
 
 pub trait PuzzleSolver {
     fn solve_puzzle(&self, puzzle: &Puzzle) -> Puzzle;
@@ -13,27 +17,44 @@ impl SudokuSolver {
     }
 
     //todo: WORK IN PROGRESS
-    fn brute_force_puzzle(&self, puzzle: &mut Puzzle) {
+    fn brute_force_puzzle(&self, puzzle: &Puzzle) -> Puzzle {
+        let mut result_puzzle: Puzzle = puzzle.clone();
+
+        let mut is_direction_forward = true;
         loop {
-            let next_cell_res = puzzle.next_cell();
-            if next_cell_res.is_err() {
+            let cell_res = if is_direction_forward {
+                result_puzzle.next_cell()
+            } else {
+                result_puzzle.previous_cell()
+            };
+
+            if cell_res.is_err() {
                 break;
             }
+            let cell: &mut Cell = cell_res.unwrap();
 
-            let mut next_cell: &mut Cell = next_cell_res.unwrap();
-            if (next_cell.is_prescribed()) {
-                continue;
+            loop {
+                let increment_res = cell.increment_value();
+                if increment_res.is_err() {
+                    is_direction_forward = false;
+                    cell.reset_value();
+                    continue;
+                } else {
+                    is_direction_forward = true;
+                }
+                if puzzle.accept_cell(cell) {
+                    break;
+                }
             }
-
         }
+
+        result_puzzle
     }
 }
 
 impl PuzzleSolver for SudokuSolver {
     fn solve_puzzle(&self, puzzle: &Puzzle) -> Puzzle {
-        let mut puzzle: Puzzle = puzzle.clone();
-        self.brute_force_puzzle(&mut puzzle);
-        puzzle
+        self.brute_force_puzzle(&puzzle)
     }
 
     fn solve_all_puzzles(&self, puzzles: &Vec<Puzzle>) -> Vec<Puzzle> {

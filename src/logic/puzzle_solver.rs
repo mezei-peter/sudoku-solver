@@ -25,6 +25,9 @@ impl SudokuSolver {
             let cell_res = if is_direction_forward {
                 result_puzzle.next_cell()
             } else {
+                if !is_direction_forward && result_puzzle.is_initial_pos() {
+                    break;
+                }
                 result_puzzle.previous_cell()
             };
 
@@ -38,7 +41,7 @@ impl SudokuSolver {
                 if increment_res.is_err() {
                     is_direction_forward = false;
                     cell.reset_value();
-                    continue;
+                    break;
                 } else {
                     is_direction_forward = true;
                 }

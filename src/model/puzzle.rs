@@ -85,7 +85,11 @@ impl Puzzle {
     }
 
     pub fn accept_cell(&self, cell: &Cell) -> bool {
-        false
+        true
+    }
+
+    pub fn is_initial_pos(&self) -> bool {
+        self.current_x == 0 && self.current_y == 0
     }
 }
 

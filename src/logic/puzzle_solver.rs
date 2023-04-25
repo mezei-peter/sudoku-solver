@@ -14,8 +14,8 @@ impl SudokuSolver {
 
     //todo: WORK IN PROGRESS
     fn brute_force_puzzle(&self, puzzle: &mut Puzzle) {
-        println!("--------------------FRONT--------------------------");
-        while let next_cell_res = puzzle.next_cell() {
+        loop {
+            let next_cell_res = puzzle.next_cell();
             if next_cell_res.is_err() {
                 break;
             }
@@ -26,18 +26,6 @@ impl SudokuSolver {
             }*/
 
             dbg!("{:?}", next_cell);
-        }
-
-
-        println!("--------------------BACK--------------------------");
-        while let previous_cell_res = puzzle.previous_cell() {
-            if previous_cell_res.is_err() {
-                break;
-            }
-
-            let mut previous_cell: &mut Cell = previous_cell_res.unwrap();
-
-            dbg!("{:?}", previous_cell);
         }
     }
 }

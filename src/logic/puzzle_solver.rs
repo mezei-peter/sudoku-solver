@@ -31,8 +31,6 @@ impl SudokuSolver {
             }
 
             let cell: &Cell = cell_res.unwrap();
-            dbg!(is_forward);
-            dbg!(cell);
             if cell.is_prescribed() {
                 if !is_forward {
                     break;

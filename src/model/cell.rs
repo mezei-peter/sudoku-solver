@@ -1,3 +1,5 @@
+use super::default_puzzle_properties::DefaultProps;
+
 #[derive(Debug)]
 pub struct Cell {
     value: char,
@@ -15,6 +17,17 @@ impl Cell {
 
     pub fn is_prescribed(&self) -> bool {
         self.prescribed
+    }
+
+    pub fn increment_value(&mut self) -> Result<char, ()> {
+        let original: u32 = self.value.to_digit(10).unwrap();
+        if original + 1 > DefaultProps::GRID_SIZE as u32 {
+            return Err(());
+        }
+
+        let new_value: char = char::from_u32(original + 1).unwrap();
+        self.value = char::from_u32(original + 1).unwrap();
+        Ok(new_value)
     }
 }
 

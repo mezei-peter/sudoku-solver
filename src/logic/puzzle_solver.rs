@@ -21,11 +21,10 @@ impl SudokuSolver {
             }
 
             let mut next_cell: &mut Cell = next_cell_res.unwrap();
-            /*if (next_cell.is_prescribed()) {
+            if (next_cell.is_prescribed()) {
                 continue;
-            }*/
+            }
 
-            dbg!("{:?}", next_cell);
         }
     }
 }

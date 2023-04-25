@@ -41,6 +41,22 @@ impl Cell {
     pub fn reset_value(&mut self) {
         self.value = '0';
     }
+
+    pub fn get_pos_x(&self) -> u8 {
+        self.position.0
+    }
+
+    pub fn get_pos_y(&self) -> u8 {
+        self.position.1
+    }
+
+    pub fn get_position(&self) -> (u8, u8) {
+        self.position
+    }
+
+    pub fn set_value(&mut self, value: char) {
+        self.value = value;
+    }
 }
 
 impl Clone for Cell {

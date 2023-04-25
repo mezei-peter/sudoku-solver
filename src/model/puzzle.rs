@@ -1,4 +1,4 @@
-use std::vec::Vec;
+use std::{cell, vec::Vec};
 
 use crate::model::cell::Cell;
 
@@ -20,7 +20,7 @@ impl Puzzle {
             current_x: 0,
             current_y: 0,
             initial_pos: true,
-            end_pos: false
+            end_pos: false,
         }
     }
 
@@ -91,6 +91,42 @@ impl Puzzle {
     pub fn is_initial_pos(&self) -> bool {
         self.current_x == 0 && self.current_y == 0
     }
+
+    pub fn get_matrix_cell(&self, x: usize, y: usize) -> Option<&Cell> {
+        let x_res = self.matrix.get(x);
+        if x_res.is_none() {
+            return None;
+        }
+        x_res.unwrap().get(y)
+    }
+
+    pub fn get_grid_size(&self) -> u8 {
+        self.grid_size
+    }
+
+    pub fn replace_cell_value_at_position(&mut self, position: (u8, u8), value: char) {
+        let mut line = self.matrix.get_mut(position.0 as usize).unwrap();
+        let mut cell: &mut Cell = line.get_mut(position.1 as usize).unwrap();
+        cell.set_value(value);
+    }
+
+    pub fn valid_value_at_position(&self, value: char, position: (u8, u8)) -> bool {
+        once_in_row(position.0 as usize, value)
+            && once_in_column(position.0 as usize, value)
+            && once_in_subgrid(position.0 as usize, value)
+    }
+}
+
+fn once_in_subgrid(position: usize, value: char) -> bool {
+    false
+}
+
+fn once_in_column(position: usize, value: char) -> bool {
+    false
+}
+
+fn once_in_row(position: usize, value: char) -> bool {
+    false
 }
 
 impl Clone for Puzzle {

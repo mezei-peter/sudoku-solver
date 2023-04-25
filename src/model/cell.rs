@@ -57,6 +57,10 @@ impl Cell {
     pub fn set_value(&mut self, value: char) {
         self.value = value;
     }
+
+    pub fn has_value(&self, value: char) -> bool {
+        self.value == value
+    }
 }
 
 impl Clone for Cell {

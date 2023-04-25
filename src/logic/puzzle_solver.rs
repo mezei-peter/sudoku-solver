@@ -100,7 +100,8 @@ impl SudokuSolver {
 
 impl PuzzleSolver for SudokuSolver {
     fn solve_puzzle(&self, puzzle: &Puzzle) -> Puzzle {
-        self.brute_force_puzzle(&puzzle)
+        let result: Puzzle = self.brute_force_puzzle(&puzzle);
+        result
     }
 
     fn solve_all_puzzles(&self, puzzles: &Vec<Puzzle>) -> Vec<Puzzle> {

@@ -112,19 +112,38 @@ impl Puzzle {
 
     pub fn valid_value_at_position(&self, value: char, position: (u8, u8)) -> bool {
         self.once_in_row(position.0 as usize, value)
-            && self.once_in_column(position.0 as usize, value)
-            && self.once_in_subgrid(position.0 as usize, value)
+            && self.once_in_column(position.1 as usize, value)
+            && self.once_in_subgrid(position, value)
     }
 
-    fn once_in_row(&self, position: usize, value: char) -> bool {
-        true
+    fn once_in_row(&self, x: usize, value: char) -> bool {
+        let row = self.matrix.get(x).unwrap();
+        let mut count: u8 = 0;
+        row.iter()
+            .for_each(|cell: &Cell| {
+                if cell.has_value(value) {
+                    count += 1;
+                }
+            });
+        count == 1
     }
 
-    fn once_in_column(&self, position: usize, value: char) -> bool {
-        true
+    fn once_in_column(&self, y: usize, value: char) -> bool {
+        let mut column: Vec<&Cell> = Vec::<&Cell>::new();
+        for row in &self.matrix {
+            column.push(row.get(y).unwrap());
+        }
+        let mut count: u8 = 0;
+        column.iter()
+            .for_each(|cell| {
+                if cell.has_value(value) {
+                    count += 1;
+                }
+            });
+        count == 1
     }
 
-    fn once_in_subgrid(&self, position: usize, value: char) -> bool {
+    fn once_in_subgrid(&self, position: (u8, u8), value: char) -> bool {
         true
     }
 }

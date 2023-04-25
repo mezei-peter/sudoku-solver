@@ -1,4 +1,4 @@
-use crate::model::{puzzle::Puzzle, default_puzzle_properties::DefaultProps, cell::Cell};
+use crate::model::{cell::Cell, default_puzzle_properties::DefaultProps, puzzle::Puzzle};
 
 pub trait PuzzleParser {
     fn parse_puzzle_file(&self, content: &String) -> Vec<Puzzle>;
@@ -34,15 +34,25 @@ impl PuzzleParser for PuzzleParserImpl {
 
         let mut position: u16 = 0;
         let mut row: u8 = 0;
+        let mut col: u8 = 0;
         while position < line.chars().count() as u16 {
             let ch: char = line.chars().nth(position as usize).unwrap();
-            puzzle_matrix[row as usize].push(Cell::new(ch, if ch == '0' { false } else { true }));
+            let cell: Cell = Cell::new(
+                ch,
+                if ch == '0' { false } else { true },
+                (row, col),
+            );
+
+            puzzle_matrix[row as usize].push(cell);
 
             position += 1;
+            col += 1;
             if position % DefaultProps::GRID_SIZE as u16 == 0 {
                 row += 1;
+                col = 0;
             }
         }
+
 
         Puzzle::new(DefaultProps::GRID_SIZE, puzzle_matrix)
     }

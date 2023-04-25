@@ -4,11 +4,16 @@ use super::default_puzzle_properties::DefaultProps;
 pub struct Cell {
     value: char,
     prescribed: bool,
+    position: (u8, u8),
 }
 
 impl Cell {
-    pub fn new(value: char, prescribed: bool) -> Cell {
-        Cell { value, prescribed }
+    pub fn new(value: char, prescribed: bool, position: (u8, u8)) -> Cell {
+        Cell {
+            value,
+            prescribed,
+            position,
+        }
     }
 
     pub fn is_empty(&self) -> bool {
@@ -40,6 +45,10 @@ impl Cell {
 
 impl Clone for Cell {
     fn clone(&self) -> Cell {
-        Cell {value: self.value.clone(), prescribed: self.prescribed.clone()}
+        Cell {
+            value: self.value.clone(),
+            prescribed: self.prescribed.clone(),
+            position: self.position.clone(),
+        }
     }
 }

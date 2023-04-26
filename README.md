@@ -1,7 +1,7 @@
 # Sudoku solver in Rust
 
 ## Intro
-My very first personal Rust project. The software can solve sudoku puzzles based on a .sdm file input and print the solution to the terminal in an Simple Sudoku format.
+My very first personal Rust project. The software can solve sudoku puzzles based on a .sdm input file and print the solutions to the terminal in a Simple Sudoku format.
 
 I learned a lot about implementing OOP and functional concepts in Rust, and of course I learned a tremendous amount about memory and the borrow checker.
 
@@ -15,12 +15,12 @@ cargo run -- -f ./assets/example.sdm
 
 ## Features
 #### Current
-- Read sudoku puzzles based on .sdm files (one or multiple).
+- Read sudoku puzzles based on .sdm files (containing one or multiple puzzles).
 - Solve the puzzles using a brute force method.
 - Convert the input and the result puzzles into human-readable Simple Sudoku format.
 #### Planned
 - More sophisticated solver algorithms.
-- Ability to output the resulting Simple Sudoku into files.
+- Ability to write the solutions into .ss files.
 
 ## Formats
 #### .sdm

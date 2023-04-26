@@ -1,9 +1,6 @@
-use crate::model::{
-    cell::{Cell},
-    puzzle::Puzzle,
-};
+use crate::model::{cell::Cell, puzzle::Puzzle};
 
-use super::format_converter::{FormatConverter};
+use super::format_converter::FormatConverter;
 
 pub trait PuzzleSolver {
     fn solve_puzzle(&self, puzzle: &Puzzle) -> Puzzle;
@@ -38,13 +35,21 @@ impl SudokuSolver {
                 if !is_forward && x == 0 && y == 0 {
                     break;
                 }
-                let next_res = self.next_position(x, y, bound);
-                if next_res.is_err() {
-                    break;
+                if is_forward {
+                    let next_res = self.next_position(x, y, bound);
+                    if next_res.is_err() {
+                        break;
+                    }
+                    (x, y) = next_res.unwrap();
+                    continue;
+                } else {
+                    let prev_res = self.previous_position(x, y, bound);
+                    if prev_res.is_err() {
+                        break;
+                    }
+                    (x, y) = prev_res.unwrap();
+                    continue;
                 }
-                (x, y) = next_res.unwrap();
-                is_forward = true;
-                continue;
             }
 
             let mut new_cell = cell.clone();
@@ -58,6 +63,7 @@ impl SudokuSolver {
                 (x, y) = next_res.unwrap();
                 is_forward = true;
             } else {
+                result_puzzle.replace_cell_value_at_position(new_cell.get_position(), '0');
                 let prev_res = self.previous_position(x, y, bound);
                 if prev_res.is_err() {
                     break;

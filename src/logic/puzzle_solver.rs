@@ -4,7 +4,7 @@ use crate::model::{
     puzzle::Puzzle,
 };
 
-use super::format_converter::{FormatConverterImpl, self, FormatConverter};
+use super::format_converter::{self, FormatConverter, FormatConverterImpl};
 
 pub trait PuzzleSolver {
     fn solve_puzzle(&self, puzzle: &Puzzle) -> Puzzle;
@@ -17,7 +17,7 @@ pub struct SudokuSolver {
 
 impl SudokuSolver {
     pub fn new(format_converter: Box<dyn FormatConverter>) -> SudokuSolver {
-        SudokuSolver {format_converter}
+        SudokuSolver { format_converter }
     }
 
     //todo: WORK IN PROGRESS
@@ -106,6 +106,14 @@ impl SudokuSolver {
 impl PuzzleSolver for SudokuSolver {
     fn solve_puzzle(&self, puzzle: &Puzzle) -> Puzzle {
         let result: Puzzle = self.brute_force_puzzle(&puzzle);
+        let original_ss: String = self.format_converter.puzzle_to_ss(puzzle);
+        let result_ss: String = self.format_converter.puzzle_to_ss(&result);
+
+        println!("Solved puzzle FROM: ");
+        println!("{}", original_ss);
+        println!("...TO: ");
+        println!("{}", result_ss);
+
         result
     }
 

@@ -32,7 +32,7 @@ impl SudokuSolver {
 
             let cell: &Cell = cell_res.unwrap();
             if cell.is_prescribed() {
-                if !is_forward {
+                if !is_forward && x == 0 && y == 0 {
                     break;
                 }
                 let next_res = self.next_position(x, y, bound);
@@ -46,7 +46,8 @@ impl SudokuSolver {
 
             let mut new_cell = cell.clone();
             if self.experiment_valid_cell_value(&mut new_cell, &result_puzzle) {
-                result_puzzle.replace_cell_value_at_position(new_cell.get_position(), new_cell.get_value());
+                result_puzzle
+                    .replace_cell_value_at_position(new_cell.get_position(), new_cell.get_value());
                 let next_res = self.next_position(x, y, bound);
                 if next_res.is_err() {
                     break;
@@ -87,7 +88,7 @@ impl SudokuSolver {
 
     fn experiment_valid_cell_value(&self, cell: &mut Cell, puzzle: &Puzzle) -> bool {
         loop {
-            let increment_res = cell.increment_value();
+            let increment_res = cell.increment_value(puzzle.get_grid_size());
             if increment_res.is_err() {
                 return false;
             }

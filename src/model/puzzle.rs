@@ -125,7 +125,7 @@ impl Puzzle {
                     count += 1;
                 }
             });
-        count == 1
+        count <= 1
     }
 
     fn once_in_column(&self, y: usize, value: char) -> bool {
@@ -140,7 +140,7 @@ impl Puzzle {
                     count += 1;
                 }
             });
-        count == 1
+        count <= 1
     }
 
     fn once_in_subgrid(&self, position: (u8, u8), value: char) -> bool {

@@ -24,9 +24,9 @@ impl Cell {
         self.prescribed
     }
 
-    pub fn increment_value(&mut self) -> Result<char, ()> {
+    pub fn increment_value(&mut self, grid_size: u8) -> Result<char, ()> {
         let original: u32 = self.value.to_digit(10).unwrap();
-        if original + 1 > DefaultProps::GRID_SIZE as u32 {
+        if original + 1 > grid_size as u32 {
             return Err(());
         }
 

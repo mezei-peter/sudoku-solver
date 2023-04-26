@@ -1,20 +1,38 @@
 # Sudoku solver in Rust
 
-### .sdm
+## Intro
+My very first personal Rust project. The software can solve sudoku puzzles based on a .sdm file input and print the solution to the terminal in an Simple Sudoku format.
+
+I learned a lot about implementing OOP and functional concepts in Rust, and of course I learned a tremendous amount about memory and the borrow checker.
+
+## Usage
+The source code can be run with **cargo**. It is important to tell the program the path of the input file. There is an example file in the /assets directory. As it is brute force, it might take a couple of seconds for it to solve all the puzzles.
+```bash
+cargo run -- -f ./assets/example.sdm
+```
+##### Screenshot
+![Screenshot of the program running in the terminal](https://i.imgur.com/uxbX52I.png)
+
+## Features
+#### Current
+- Read sudoku puzzles based on .sdm files (one or multiple).
+- Solve the puzzles using a brute force method.
+- Convert the input and the result puzzles into human-readable Simple Sudoku format.
+#### Planned
+- More sophisticated solver algorithms.
+- Ability to output the resulting Simple Sudoku into files.
+
+## Formats
+#### .sdm
 
 Format where each line represents a sudoku puzzle. 0 represents an empty space. Can have multiple lines.
 ```
 016400000200009000400000062070230100100000003003087040960000005000800007000006820
 049008605003007000000000030000400800060815020001009000010000000000600400804500390
 760500000000060008000000403200400800080000030005001007809000000600010000000003041
-000605000003020800045090270500000001062000540400000007098060450006040700000203000
-409000705000010000006207800200000009003704200800000004002801500000060000905000406
-000010030040070501002008006680000003000302000300000045200500800801040020090020000
-080070030260050018000000400000602000390010086000709000004000800810040052050090070
-000093006000800900020006100000080053006000200370050000002500040001009000700130000
 ```
 
-### .ss
+#### .ss/Simple Sudoku
 
 Human-readable sudoku format.
 ```

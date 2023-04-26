@@ -2,20 +2,19 @@ use std::env;
 
 use logic::{
     arguments_service::ArgsService,
-    puzzle_parser::{PuzzleParser, PuzzleParserImpl},
+    puzzle_parser::{PuzzleParser, PuzzleParserImpl}, format_converter::{self, FormatConverter, FormatConverterImpl},
 };
 
-use crate::{
-    logic::{
-        arguments_service::ArgsServiceImpl,
-        puzzle_solver::{PuzzleSolver, SudokuSolver},
-    },
+use crate::logic::{
+    arguments_service::ArgsServiceImpl,
+    puzzle_solver::{PuzzleSolver, SudokuSolver},
 };
 
 mod logic {
     pub mod arguments_service;
     pub mod puzzle_parser;
     pub mod puzzle_solver;
+    pub mod format_converter;
 }
 mod model {
     pub mod cell;
@@ -27,7 +26,8 @@ mod ui {}
 fn main() {
     let args: Vec<String> = env::args().collect();
     let puzzle_parser: Box<dyn PuzzleParser> = Box::new(PuzzleParserImpl::new());
-    let puzzle_solver: Box<dyn PuzzleSolver> = Box::new(SudokuSolver::new());
+    let format_converter: Box<dyn FormatConverter> = Box::new(FormatConverterImpl::new());
+    let puzzle_solver: Box<dyn PuzzleSolver> = Box::new(SudokuSolver::new(format_converter));
     let arg_service: Box<dyn ArgsService> =
         Box::new(ArgsServiceImpl::new(puzzle_parser, puzzle_solver));
     arg_service.process(&args);

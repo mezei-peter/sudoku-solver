@@ -146,6 +146,10 @@ impl Puzzle {
     fn once_in_subgrid(&self, position: (u8, u8), value: char) -> bool {
         true
     }
+
+    pub fn clone_matrix(&self) -> Vec<Vec<Cell>> {
+        self.matrix.clone()
+    }
 }
 
 impl Clone for Puzzle {

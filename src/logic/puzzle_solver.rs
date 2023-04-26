@@ -4,16 +4,20 @@ use crate::model::{
     puzzle::Puzzle,
 };
 
+use super::format_converter::{FormatConverterImpl, self, FormatConverter};
+
 pub trait PuzzleSolver {
     fn solve_puzzle(&self, puzzle: &Puzzle) -> Puzzle;
     fn solve_all_puzzles(&self, puzzles: &Vec<Puzzle>) -> Vec<Puzzle>;
 }
 
-pub struct SudokuSolver;
+pub struct SudokuSolver {
+    format_converter: Box<dyn FormatConverter>,
+}
 
 impl SudokuSolver {
-    pub fn new() -> SudokuSolver {
-        SudokuSolver {}
+    pub fn new(format_converter: Box<dyn FormatConverter>) -> SudokuSolver {
+        SudokuSolver {format_converter}
     }
 
     //todo: WORK IN PROGRESS

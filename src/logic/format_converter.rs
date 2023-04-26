@@ -1,5 +1,7 @@
-
-use crate::model::{puzzle::{Puzzle, self}, cell::Cell, default_puzzle_properties::DefaultProps};
+use crate::model::{
+    cell::Cell,
+    puzzle::Puzzle,
+};
 
 pub trait FormatConverter {
     fn puzzle_to_ss(&self, puzzle: &Puzzle) -> String;
@@ -41,7 +43,10 @@ impl FormatConverter for FormatConverterImpl {
                     ss.push('\n');
                     if x != 0 && x != grid_size - 1 {
                         if (x + 1) % subgrid_height == 0 {
-                            ss.push_str("-".repeat(grid_size as usize + subgrid_width as usize - 1).as_str());
+                            ss.push_str(
+                                "-".repeat(grid_size as usize + subgrid_width as usize - 1)
+                                    .as_str(),
+                            );
                             ss.push('\n');
                         }
                     }

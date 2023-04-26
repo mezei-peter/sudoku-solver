@@ -2,7 +2,8 @@ use std::env;
 
 use logic::{
     arguments_service::ArgsService,
-    puzzle_parser::{PuzzleParser, PuzzleParserImpl}, format_converter::{self, FormatConverter, FormatConverterImpl},
+    format_converter::{FormatConverter, FormatConverterImpl},
+    puzzle_parser::{PuzzleParser, PuzzleParserImpl},
 };
 
 use crate::logic::{
@@ -12,9 +13,9 @@ use crate::logic::{
 
 mod logic {
     pub mod arguments_service;
+    pub mod format_converter;
     pub mod puzzle_parser;
     pub mod puzzle_solver;
-    pub mod format_converter;
 }
 mod model {
     pub mod cell;

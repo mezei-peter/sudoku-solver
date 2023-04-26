@@ -1,10 +1,9 @@
 use crate::model::{
-    cell::{self, Cell},
-    default_puzzle_properties::DefaultProps,
+    cell::{Cell},
     puzzle::Puzzle,
 };
 
-use super::format_converter::{self, FormatConverter, FormatConverterImpl};
+use super::format_converter::{FormatConverter};
 
 pub trait PuzzleSolver {
     fn solve_puzzle(&self, puzzle: &Puzzle) -> Puzzle;

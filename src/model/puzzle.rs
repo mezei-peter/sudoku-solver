@@ -1,4 +1,4 @@
-use std::{cell, vec::Vec};
+use std::{vec::Vec};
 
 use crate::model::cell::Cell;
 

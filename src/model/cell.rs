@@ -1,5 +1,3 @@
-use super::default_puzzle_properties::DefaultProps;
-
 #[derive(Debug)]
 pub struct Cell {
     value: char,

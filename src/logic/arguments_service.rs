@@ -1,8 +1,8 @@
 use std::fs;
 
-use crate::model::puzzle::Puzzle;
+use crate::model::{puzzle::{Puzzle}, default_puzzle_properties::DefaultProps};
 
-use super::puzzle_parser::PuzzleParser;
+use super::{puzzle_parser::PuzzleParser, puzzle_solver::{PuzzleSolver}};
 
 pub trait ArgsService {
     fn process(&self, args: &Vec<String>);
@@ -10,14 +10,17 @@ pub trait ArgsService {
 
 pub struct ArgsServiceImpl {
     puzzle_parser: Box<dyn PuzzleParser>,
-    default_grid_size: u8,
+    puzzle_solver: Box<dyn PuzzleSolver>,
 }
 
 impl ArgsServiceImpl {
-    pub fn new(puzzle_parser: Box<dyn PuzzleParser>, default_grid_size: u8) -> ArgsServiceImpl {
+    pub fn new(
+        puzzle_parser: Box<dyn PuzzleParser>,
+        puzzle_solver: Box<dyn PuzzleSolver>,
+    ) -> ArgsServiceImpl {
         ArgsServiceImpl {
             puzzle_parser,
-            default_grid_size,
+            puzzle_solver,
         }
     }
 
@@ -28,6 +31,7 @@ impl ArgsServiceImpl {
             return;
         }
         let puzzles: Vec<Puzzle> = self.puzzle_parser.parse_puzzle_file(&content);
+        let solved_puzzles: Vec<Puzzle> = self.puzzle_solver.solve_all_puzzles(&puzzles);
     }
 
     fn invalidate_file(&self, file_path: &String, content: &String) -> bool {
@@ -36,7 +40,7 @@ impl ArgsServiceImpl {
             return true;
         }
         if content.lines().count() == 1 {
-            if self.default_grid_size.pow(2) as usize != content.chars().count() {
+            if DefaultProps::GRID_SIZE.pow(2) as usize != content.chars().count() {
                 println!("Corrupted file data: length of lines are wrong.");
                 return true;
             }

@@ -110,7 +110,7 @@ impl PuzzleSolver for SudokuSolver {
     }
 
     fn solve_all_puzzles(&self, puzzles: &Vec<Puzzle>) -> Vec<Puzzle> {
-        let mut count: u8 = 0;
+        let mut count: usize = 1;
         puzzles
             .iter()
             .map(|puzzle: &Puzzle| {

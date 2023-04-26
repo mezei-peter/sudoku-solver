@@ -106,21 +106,23 @@ impl SudokuSolver {
 impl PuzzleSolver for SudokuSolver {
     fn solve_puzzle(&self, puzzle: &Puzzle) -> Puzzle {
         let result: Puzzle = self.brute_force_puzzle(&puzzle);
-        let original_ss: String = self.format_converter.puzzle_to_ss(puzzle);
-        let result_ss: String = self.format_converter.puzzle_to_ss(&result);
-
-        println!("Solved puzzle FROM: ");
-        println!("{}", original_ss);
-        println!("...TO: ");
-        println!("{}", result_ss);
-
         result
     }
 
     fn solve_all_puzzles(&self, puzzles: &Vec<Puzzle>) -> Vec<Puzzle> {
+        let mut count: u8 = 0;
         puzzles
             .iter()
-            .map(|puzzle: &Puzzle| self.solve_puzzle(&puzzle))
+            .map(|puzzle: &Puzzle| {
+                println!(">>>Puzzle {}<<<", count);
+                count += 1;
+                println!("Solving puzzle FROM: ");
+                println!("{}", self.format_converter.puzzle_to_ss(puzzle));
+                println!("TO...: ");
+                let solution = self.solve_puzzle(&puzzle);
+                println!("{}", self.format_converter.puzzle_to_ss(&solution));
+                solution
+            })
             .collect()
     }
 }

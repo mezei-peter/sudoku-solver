@@ -61,6 +61,10 @@ impl Cell {
     pub fn has_value(&self, value: char) -> bool {
         self.value == value
     }
+
+    pub fn set_prescribed(&mut self, val: bool) {
+        self.prescribed = val;
+    }
 }
 
 impl Clone for Cell {

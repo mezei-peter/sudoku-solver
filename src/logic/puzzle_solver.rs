@@ -24,12 +24,11 @@ impl SudokuSolver {
         let mut is_forward: bool = true;
 
         loop {
-            let cell_res = result_puzzle.get_matrix_cell(x, y);
-            if cell_res.is_none() {
-                break;
-            }
+            let cell: &Cell = match result_puzzle.get_matrix_cell(x, y) {
+                Some(cell) => cell,
+                None => break,
+            };
 
-            let cell: &Cell = cell_res.unwrap();
             if cell.is_prescribed() {
                 if !is_forward && x == 0 && y == 0 {
                     break;

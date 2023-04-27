@@ -1,3 +1,5 @@
+use super::default_puzzle_properties::DefaultProps;
+
 #[derive(Debug)]
 pub struct Cell {
     value: char,
@@ -15,7 +17,7 @@ impl Cell {
     }
 
     pub fn is_empty(&self) -> bool {
-        self.value == '0'
+        self.value == DefaultProps::EMPTY_VALUE
     }
 
     pub fn is_prescribed(&self) -> bool {
@@ -37,7 +39,7 @@ impl Cell {
     }
 
     pub fn reset_value(&mut self) {
-        self.value = '0';
+        self.value = DefaultProps::EMPTY_VALUE;
     }
 
     pub fn get_pos_x(&self) -> u8 {

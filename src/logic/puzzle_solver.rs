@@ -1,4 +1,4 @@
-use crate::model::{cell::Cell, puzzle::Puzzle};
+use crate::model::{cell::Cell, puzzle::Puzzle, default_puzzle_properties::DefaultProps};
 
 use super::format_converter::FormatConverter;
 
@@ -16,7 +16,6 @@ impl SudokuSolver {
         SudokuSolver { format_converter }
     }
 
-    //todo: WORK IN PROGRESS
     fn brute_force_puzzle(&self, puzzle: &Puzzle) -> Puzzle {
         let mut result_puzzle: Puzzle = puzzle.clone();
         let bound: u8 = puzzle.get_grid_size();
@@ -25,52 +24,28 @@ impl SudokuSolver {
         let mut is_forward: bool = true;
 
         loop {
-            let cell_res = result_puzzle.get_matrix_cell(x, y);
-            if cell_res.is_none() {
-                break;
-            }
+            let cell: &Cell = match result_puzzle.get_matrix_cell(x, y) {
+                Some(cell) => cell,
+                None => break,
+            };
 
-            let cell: &Cell = cell_res.unwrap();
             if cell.is_prescribed() {
-                if !is_forward && x == 0 && y == 0 {
+                let (should_break, new_x, new_y, new_is_forward) =
+                    self.analyze_iter_prescribed(is_forward, x, y, bound);
+                if should_break {
                     break;
                 }
-                if is_forward {
-                    let next_res = self.next_position(x, y, bound);
-                    if next_res.is_err() {
-                        break;
-                    }
-                    (x, y) = next_res.unwrap();
-                    continue;
-                } else {
-                    let prev_res = self.previous_position(x, y, bound);
-                    if prev_res.is_err() {
-                        break;
-                    }
-                    (x, y) = prev_res.unwrap();
-                    continue;
-                }
+                (x, y, is_forward) = (new_x, new_y, new_is_forward);
+                continue;
             }
 
             let mut new_cell = cell.clone();
-            if self.experiment_valid_cell_value(&mut new_cell, &result_puzzle) {
-                result_puzzle
-                    .replace_cell_value_at_position(new_cell.get_position(), new_cell.get_value());
-                let next_res = self.next_position(x, y, bound);
-                if next_res.is_err() {
-                    break;
-                }
-                (x, y) = next_res.unwrap();
-                is_forward = true;
-            } else {
-                result_puzzle.replace_cell_value_at_position(new_cell.get_position(), '0');
-                let prev_res = self.previous_position(x, y, bound);
-                if prev_res.is_err() {
-                    break;
-                }
-                (x, y) = prev_res.unwrap();
-                is_forward = false;
+            let (should_break, new_x, new_y, new_is_forward) = 
+                self.analyze_iter_unprescribed(is_forward, x, y, bound, &mut new_cell, &mut result_puzzle);
+            if should_break {
+                break;
             }
+            (x, y, is_forward) = (new_x, new_y, new_is_forward);
         }
         result_puzzle
     }
@@ -103,6 +78,58 @@ impl SudokuSolver {
             }
             if puzzle.valid_value_at_position(increment_res.unwrap(), cell.get_position()) {
                 return true;
+            }
+        }
+    }
+
+    fn analyze_iter_prescribed(
+        &self,
+        is_forward: bool,
+        x: usize,
+        y: usize,
+        bound: u8,
+    ) -> (bool, usize, usize, bool) {
+        if !is_forward && x == 0 && y == 0 {
+            return (true, x, y, is_forward);
+        }
+        if is_forward {
+            match self.next_position(x, y, bound) {
+                Ok((x_new, y_new)) => {
+                    return (false, x_new, y_new, is_forward);
+                }
+                Err(()) => return (true, x, y, is_forward),
+            };
+        } else {
+            match self.previous_position(x, y, bound) {
+                Ok((x_new, y_new)) => {
+                    return (false, x_new, y_new, is_forward);
+                }
+                Err(()) => return (true, x, y, is_forward),
+            }
+        }
+    }
+
+    fn analyze_iter_unprescribed(
+        &self,
+        is_forward: bool,
+        x: usize,
+        y: usize,
+        bound: u8,
+        new_cell: &mut Cell,
+        result_puzzle: &mut Puzzle,
+    ) -> (bool, usize, usize, bool) {
+        if self.experiment_valid_cell_value(new_cell, &result_puzzle) {
+            result_puzzle
+                .replace_cell_value_at_position(new_cell.get_position(), new_cell.get_value());
+            match self.next_position(x, y, bound) {
+                Ok((x_new, y_new)) => return (false, x_new, y_new, true),
+                Err(()) => return (true, x, y, is_forward),
+            }
+        } else {
+            result_puzzle.replace_cell_value_at_position(new_cell.get_position(), DefaultProps::EMPTY_VALUE);
+            match self.previous_position(x, y, bound) {
+                Ok((x_new, y_new)) => return (false, x_new, y_new, false),
+                Err(()) => return (true, x, y, is_forward),
             }
         }
     }

@@ -1,10 +1,8 @@
-use crate::model::{
-    cell::Cell,
-    puzzle::Puzzle,
-};
+use crate::model::{cell::Cell, puzzle::Puzzle};
 
 pub trait FormatConverter {
     fn puzzle_to_ss(&self, puzzle: &Puzzle) -> String;
+    fn matrix_to_ss(&self, matrix: &Vec<Vec<Cell>>) -> String;
 }
 
 pub struct FormatConverterImpl;
@@ -17,11 +15,15 @@ impl FormatConverterImpl {
 
 impl FormatConverter for FormatConverterImpl {
     fn puzzle_to_ss(&self, puzzle: &Puzzle) -> String {
+        let matrix: Vec<Vec<Cell>> = puzzle.clone_matrix();
+        self.matrix_to_ss(&matrix)
+    }
+
+    fn matrix_to_ss(&self, matrix: &Vec<Vec<Cell>>) -> String {
         let mut ss: String = String::new();
-        let grid_size: u8 = puzzle.get_grid_size();
+        let grid_size: u8 = matrix.len() as u8;
         let subgrid_width: u8 = f32::sqrt(grid_size as f32).ceil() as u8;
         let subgrid_height: u8 = f32::sqrt(grid_size as f32).floor() as u8;
-        let matrix: Vec<Vec<Cell>> = puzzle.clone_matrix();
 
         for row in matrix {
             for cell in row {

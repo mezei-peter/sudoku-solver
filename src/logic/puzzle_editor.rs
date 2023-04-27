@@ -31,9 +31,9 @@ impl PuzzleEditorImpl {
 impl PuzzleEditor for PuzzleEditorImpl {
     fn create(&self) -> Puzzle {
         let grid_size: u8 = DefaultProps::GRID_SIZE;
-        let mut matrix: Vec<Vec<Cell>> = self.initialize_empty_matrix(grid_size as usize);
-        
-        let puzzle: Puzzle = Puzzle::new(grid_size, matrix);
+        let empty_matrix: Vec<Vec<Cell>> = self.initialize_empty_matrix(grid_size as usize);
+        let puzzle: Puzzle = Puzzle::new(grid_size, empty_matrix);
+
         let s: String = self.format_converter.puzzle_to_ss(&puzzle);
         println!("{}", s);
         puzzle

@@ -149,10 +149,10 @@ impl PuzzleSolver for SudokuSolver {
                 println!(">>>Puzzle {}<<<", count);
                 count += 1;
                 println!("Solving puzzle FROM: ");
-                println!("{}", self.format_converter.puzzle_to_ss(puzzle));
+                println!("{}", self.format_converter.puzzle_to_ss(puzzle, None));
                 println!("TO...: ");
                 let solution = self.solve_puzzle(&puzzle);
-                println!("{}", self.format_converter.puzzle_to_ss(&solution));
+                println!("{}", self.format_converter.puzzle_to_ss(&solution, None));
                 solution
             })
             .collect()

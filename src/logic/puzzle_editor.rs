@@ -77,14 +77,17 @@ impl PuzzleEditorImpl {
 impl PuzzleEditor for PuzzleEditorImpl {
     fn create(&self) -> Puzzle {
         let grid_size: u8 = DefaultProps::GRID_SIZE;
-        let matrix: Vec<Vec<Cell>> = self.initialize_empty_matrix(grid_size as usize);
+        let mut matrix: Vec<Vec<Cell>> = self.initialize_empty_matrix(grid_size as usize);
+        let mut puzzle: Puzzle = Puzzle::new(grid_size, matrix);
 
         let (mut x_cursor, mut y_cursor) = (0_u8, 0_u8);
         loop {
-            let cell: &Cell = &matrix[x_cursor as usize][y_cursor as usize];
+            let cell: &Cell = puzzle
+                .get_matrix_cell(x_cursor as usize, y_cursor as usize)
+                .unwrap();
             let mat_str = self
                 .format_converter
-                .matrix_to_ss(&matrix, Some(cell.get_position()));
+                .puzzle_to_ss(&puzzle, Some(cell.get_position()));
             println!("{}", mat_str);
             println!("The cursor's position is marked by X. You can: ");
             println!("  - Type 'FINISH' to submit your puzzle.");
@@ -108,9 +111,22 @@ impl PuzzleEditor for PuzzleEditorImpl {
                 break;
             } else if input.len() == 0 {
                 println!("NEXT");
-            } else if input.len() != 1 {
+            } else if input.len() != 1
+                || !DefaultProps::VALID_INPUTS.contains(&input.chars().nth(0).unwrap())
+            {
                 println!("!! ERROR Invalid input: '{}' !!", input);
                 continue;
+            } else {
+                let mut inp_char: char = input.chars().nth(0).unwrap();
+                if inp_char == DefaultProps::EMPTY_SS_VALUE {
+                    inp_char = DefaultProps::EMPTY_VALUE;
+                }
+                puzzle.replace_cell_value_at_position((x_cursor, y_cursor), inp_char);
+
+                if inp_char == DefaultProps::EMPTY_VALUE {
+                    puzzle.prescribe_cell_at_position((x_cursor, y_cursor), false);
+                }
+                puzzle.prescribe_cell_at_position((x_cursor, y_cursor), true);
             }
 
             match self.step_cursor((x_cursor, y_cursor), CursorDirection::Forward, grid_size) {
@@ -119,7 +135,6 @@ impl PuzzleEditor for PuzzleEditorImpl {
             }
         }
 
-        let puzzle: Puzzle = Puzzle::new(grid_size, matrix.clone());
         println!("\n!! Puzzle submitted !!\n");
         puzzle
     }

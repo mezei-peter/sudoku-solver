@@ -1,7 +1,7 @@
 use crate::model::{cell::Cell, puzzle::Puzzle, default_puzzle_properties::DefaultProps};
 
 pub trait FormatConverter {
-    fn puzzle_to_ss(&self, puzzle: &Puzzle) -> String;
+    fn puzzle_to_ss(&self, puzzle: &Puzzle, cursor_pos: Option<(u8, u8)>) -> String;
     fn matrix_to_ss(&self, matrix: &Vec<Vec<Cell>>, cursor_pos: Option<(u8, u8)>) -> String;
 }
 
@@ -14,9 +14,9 @@ impl FormatConverterImpl {
 }
 
 impl FormatConverter for FormatConverterImpl {
-    fn puzzle_to_ss(&self, puzzle: &Puzzle) -> String {
+    fn puzzle_to_ss(&self, puzzle: &Puzzle, cursor_pos: Option<(u8, u8)>) -> String {
         let matrix: Vec<Vec<Cell>> = puzzle.clone_matrix();
-        self.matrix_to_ss(&matrix, None)
+        self.matrix_to_ss(&matrix, cursor_pos)
     }
 
     fn matrix_to_ss(&self, matrix: &Vec<Vec<Cell>>, cursor_pos: Option<(u8, u8)>) -> String {

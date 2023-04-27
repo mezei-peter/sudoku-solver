@@ -28,6 +28,12 @@ impl Puzzle {
         self.grid_size
     }
 
+    pub fn prescribe_cell_at_position(&mut self, position: (u8, u8), val: bool) {
+        let line = self.matrix.get_mut(position.0 as usize).unwrap();
+        let cell: &mut Cell = line.get_mut(position.1 as usize).unwrap();
+        cell.set_prescribed(val);
+    }
+
     pub fn replace_cell_value_at_position(&mut self, position: (u8, u8), value: char) {
         let line = self.matrix.get_mut(position.0 as usize).unwrap();
         let cell: &mut Cell = line.get_mut(position.1 as usize).unwrap();

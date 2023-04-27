@@ -1,5 +1,3 @@
-use std::io::stdin;
-
 use crate::{
     model::{cell::Cell, default_puzzle_properties::DefaultProps, puzzle::Puzzle},
     ui::input_reader::{InputReader, InputReaderImpl},
@@ -77,7 +75,7 @@ impl PuzzleEditorImpl {
 impl PuzzleEditor for PuzzleEditorImpl {
     fn create(&self) -> Puzzle {
         let grid_size: u8 = DefaultProps::GRID_SIZE;
-        let mut matrix: Vec<Vec<Cell>> = self.initialize_empty_matrix(grid_size as usize);
+        let matrix: Vec<Vec<Cell>> = self.initialize_empty_matrix(grid_size as usize);
         let mut puzzle: Puzzle = Puzzle::new(grid_size, matrix);
 
         let (mut x_cursor, mut y_cursor) = (0_u8, 0_u8);

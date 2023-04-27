@@ -1,8 +1,8 @@
 use std::fs;
 
-use crate::model::{puzzle::{Puzzle}, default_puzzle_properties::DefaultProps};
+use crate::model::{default_puzzle_properties::DefaultProps, puzzle::Puzzle};
 
-use super::{puzzle_parser::PuzzleParser, puzzle_solver::{PuzzleSolver}};
+use super::{puzzle_parser::PuzzleParser, puzzle_solver::PuzzleSolver};
 
 pub trait ArgsService {
     fn process(&self, args: &Vec<String>);
@@ -54,18 +54,8 @@ impl ArgsServiceImpl {
 impl ArgsService for ArgsServiceImpl {
     fn process(&self, args: &Vec<String>) {
         for i in 1..args.len() {
-            if args[i].starts_with("--") {
-                if args[i].eq("--file") {
-                    self.handle_file_arg(&args[i + 1]);
-                }
-                continue;
-            }
-
-            if args[i].starts_with("-") {
-                if args[i].ends_with("f") {
-                    self.handle_file_arg(&args[i + 1]);
-                }
-                continue;
+            if args[i] == "-f" || args[i] == "--file" {
+                self.handle_file_arg(&args[i + 1]);
             }
         }
     }

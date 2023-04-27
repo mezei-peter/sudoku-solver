@@ -30,26 +30,13 @@ impl SudokuSolver {
             };
 
             if cell.is_prescribed() {
-                if !is_forward && x == 0 && y == 0 {
+                let (should_break, new_x, new_y, new_is_forward) =
+                    self.identify_prescribed_results(is_forward, x, y, bound);
+                if should_break {
                     break;
                 }
-                if is_forward {
-                    match self.next_position(x, y, bound) {
-                        Ok((x_new, y_new)) => {
-                            (x, y) = (x_new, y_new);
-                            continue;
-                        },
-                        Err(()) => break
-                    };
-                } else {
-                    match self.previous_position(x, y, bound) {
-                        Ok((x_new, y_new)) => {
-                            (x, y) = (x_new, y_new);
-                            continue;
-                        },
-                        Err(()) => break
-                    }
-                }
+                (x, y, is_forward) = (new_x, new_y, new_is_forward);
+                continue;
             }
 
             let mut new_cell = cell.clone();
@@ -60,8 +47,8 @@ impl SudokuSolver {
                     Ok((x_new, y_new)) => {
                         (x, y) = (x_new, y_new);
                         is_forward = true;
-                    },
-                    Err(()) => break
+                    }
+                    Err(()) => break,
                 }
             } else {
                 result_puzzle.replace_cell_value_at_position(new_cell.get_position(), '0');
@@ -69,8 +56,8 @@ impl SudokuSolver {
                     Ok((x_new, y_new)) => {
                         (x, y) = (x_new, y_new);
                         is_forward = false;
-                    },
-                    Err(()) => break
+                    }
+                    Err(()) => break,
                 }
             }
         }
@@ -105,6 +92,33 @@ impl SudokuSolver {
             }
             if puzzle.valid_value_at_position(increment_res.unwrap(), cell.get_position()) {
                 return true;
+            }
+        }
+    }
+
+    fn identify_prescribed_results(
+        &self,
+        is_forward: bool,
+        x: usize,
+        y: usize,
+        bound: u8,
+    ) -> (bool, usize, usize, bool) {
+        if !is_forward && x == 0 && y == 0 {
+            return (true, x, y, is_forward);
+        }
+        if is_forward {
+            match self.next_position(x, y, bound) {
+                Ok((x_new, y_new)) => {
+                    return (false, x_new, y_new, is_forward);
+                }
+                Err(()) => return (true, x, y, is_forward),
+            };
+        } else {
+            match self.previous_position(x, y, bound) {
+                Ok((x_new, y_new)) => {
+                    return (false, x_new, y_new, is_forward);
+                }
+                Err(()) => return (true, x, y, is_forward),
             }
         }
     }

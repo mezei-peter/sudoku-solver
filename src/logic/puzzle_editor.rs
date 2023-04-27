@@ -93,6 +93,7 @@ impl PuzzleEditor for PuzzleEditorImpl {
             println!("  - Type a value like '3' to insert a value.");
             let input = InputReaderImpl::read_line();
             if input == "b" {
+                println!("BACK");
                 match self.step_cursor((x_cursor, y_cursor), CursorDirection::Back, grid_size) {
                     Ok(pos) => {
                         (x_cursor, y_cursor) = pos;

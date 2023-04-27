@@ -24,7 +24,9 @@ mod model {
     pub mod default_puzzle_properties;
     pub mod puzzle;
 }
-mod ui {}
+mod ui {
+    pub mod input_reader;
+}
 
 fn main() {
     println!("\n>> Sudoku Solver in Rust <<\n");

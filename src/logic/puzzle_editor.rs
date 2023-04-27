@@ -1,4 +1,6 @@
-use crate::model::{cell::Cell, default_puzzle_properties::DefaultProps, puzzle::Puzzle};
+use std::io::stdin;
+
+use crate::{model::{cell::Cell, default_puzzle_properties::DefaultProps, puzzle::Puzzle}, ui::input_reader::{InputReaderImpl, InputReader}};
 
 use super::format_converter::{FormatConverter, FormatConverterImpl};
 
@@ -77,11 +79,25 @@ impl PuzzleEditor for PuzzleEditorImpl {
         let (mut x_cursor, mut y_cursor) = (0_u8, 0_u8);
         loop {
             let cell: &Cell = &matrix[x_cursor as usize][y_cursor as usize];
-            let s = self
-                    .format_converter
-                    .matrix_to_ss(&matrix, Some(cell.get_position()));
-                println!("{}", s);
-            
+            let mat_str = self
+                .format_converter
+                .matrix_to_ss(&matrix, Some(cell.get_position()));
+            println!("{}", mat_str);
+            println!("The cursor's position is marked by X. You can: ");
+            println!("  - Type 'FINISH' to submit your puzzle.");
+            println!("  - Type 'BACK' to move the cursor back.");
+            println!("  - Type a value like '3' to insert a value.");
+            let input = InputReaderImpl::read_line();
+            if input == "BACK" {
+                match self.step_cursor((x_cursor, y_cursor), CursorDirection::Back, grid_size) {
+                    Ok(pos) => {
+                        (x_cursor, y_cursor) = pos;
+                        continue;
+                    },
+                    Err(()) => continue,
+                }
+            }
+
             match self.step_cursor((x_cursor, y_cursor), CursorDirection::Forward, grid_size) {
                 Ok(pos) => (x_cursor, y_cursor) = pos,
                 Err(()) => break,

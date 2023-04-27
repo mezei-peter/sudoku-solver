@@ -2,7 +2,7 @@ use crate::model::{cell::Cell, puzzle::Puzzle, default_puzzle_properties::Defaul
 
 pub trait FormatConverter {
     fn puzzle_to_ss(&self, puzzle: &Puzzle) -> String;
-    fn matrix_to_ss(&self, martix: &Vec<Vec<Cell>>, cursor_pos: Option<(u8, u8)>) -> String;
+    fn matrix_to_ss(&self, matrix: &Vec<Vec<Cell>>, cursor_pos: Option<(u8, u8)>) -> String;
 }
 
 pub struct FormatConverterImpl;

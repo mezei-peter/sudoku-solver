@@ -10,6 +10,11 @@ pub struct PuzzleEditorImpl {
     format_converter: Box<dyn FormatConverter>,
 }
 
+enum CursorDirection {
+    Forward,
+    Back,
+}
+
 impl PuzzleEditorImpl {
     pub fn new() -> PuzzleEditorImpl {
         PuzzleEditorImpl {
@@ -32,14 +37,56 @@ impl PuzzleEditorImpl {
         }
         matrix
     }
+
+    fn step_cursor(
+        &self,
+        pos: (u8, u8),
+        direction: CursorDirection,
+        grid_size: u8,
+    ) -> Result<(u8, u8), ()> {
+        let x: u8 = pos.0;
+        let y: u8 = pos.1;
+        match direction {
+            CursorDirection::Forward => {
+                if x == grid_size - 1 && y == grid_size - 1 {
+                    return Err(());
+                }
+                if x == grid_size - 1 {
+                    return Ok((0, y + 1));
+                }
+                Ok((x + 1, y))
+            }
+            CursorDirection::Back => {
+                if x == 0 && y == 0 {
+                    return Err(());
+                }
+                if x == 0 {
+                    return Ok((grid_size - 1, y - 1));
+                }
+                Ok((x - 1, y))
+            }
+        }
+    }
 }
 
 impl PuzzleEditor for PuzzleEditorImpl {
     fn create(&self) -> Puzzle {
         let grid_size: u8 = DefaultProps::GRID_SIZE;
-        let mut matrix: Vec<Vec<Cell>> = self.initialize_empty_matrix(grid_size as usize);
+        let matrix: Vec<Vec<Cell>> = self.initialize_empty_matrix(grid_size as usize);
 
-        
+        let (mut x_cursor, mut y_cursor) = (0_u8, 0_u8);
+        loop {
+            let cell: &Cell = &matrix[x_cursor as usize][y_cursor as usize];
+            let s = self
+                    .format_converter
+                    .matrix_to_ss(&matrix, Some(cell.get_position()));
+                println!("{}", s);
+            
+            match self.step_cursor((x_cursor, y_cursor), CursorDirection::Forward, grid_size) {
+                Ok(pos) => (x_cursor, y_cursor) = pos,
+                Err(()) => break,
+            }
+        }
 
         let puzzle: Puzzle = Puzzle::new(grid_size, matrix.clone());
         puzzle

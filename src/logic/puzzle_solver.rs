@@ -16,7 +16,6 @@ impl SudokuSolver {
         SudokuSolver { format_converter }
     }
 
-    //todo: WORK IN PROGRESS
     fn brute_force_puzzle(&self, puzzle: &Puzzle) -> Puzzle {
         let mut result_puzzle: Puzzle = puzzle.clone();
         let bound: u8 = puzzle.get_grid_size();

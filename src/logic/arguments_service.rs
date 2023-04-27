@@ -5,7 +5,7 @@ use std::{
 
 use crate::model::{default_puzzle_properties::DefaultProps, puzzle::Puzzle};
 
-use super::{puzzle_parser::PuzzleParser, puzzle_solver::PuzzleSolver, puzzle_editor::{PuzzleEditor, self}};
+use super::{puzzle_parser::PuzzleParser, puzzle_solver::PuzzleSolver, puzzle_editor::{PuzzleEditor}};
 
 pub trait ArgsService {
     fn process(&self, args: &Vec<String>);

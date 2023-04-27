@@ -31,7 +31,7 @@ impl SudokuSolver {
 
             if cell.is_prescribed() {
                 let (should_break, new_x, new_y, new_is_forward) =
-                    self.identify_prescribed_results(is_forward, x, y, bound);
+                    self.analyze_iter_prescribed(is_forward, x, y, bound);
                 if should_break {
                     break;
                 }
@@ -40,26 +40,12 @@ impl SudokuSolver {
             }
 
             let mut new_cell = cell.clone();
-            if self.experiment_valid_cell_value(&mut new_cell, &result_puzzle) {
-                result_puzzle
-                    .replace_cell_value_at_position(new_cell.get_position(), new_cell.get_value());
-                match self.next_position(x, y, bound) {
-                    Ok((x_new, y_new)) => {
-                        (x, y) = (x_new, y_new);
-                        is_forward = true;
-                    }
-                    Err(()) => break,
-                }
-            } else {
-                result_puzzle.replace_cell_value_at_position(new_cell.get_position(), '0');
-                match self.previous_position(x, y, bound) {
-                    Ok((x_new, y_new)) => {
-                        (x, y) = (x_new, y_new);
-                        is_forward = false;
-                    }
-                    Err(()) => break,
-                }
+            let (should_break, new_x, new_y, new_is_forward) = 
+                self.analyze_iter_unprescribed(is_forward, x, y, bound, &mut new_cell, &mut result_puzzle);
+            if should_break {
+                break;
             }
+            (x, y, is_forward) = (new_x, new_y, new_is_forward);
         }
         result_puzzle
     }
@@ -96,7 +82,7 @@ impl SudokuSolver {
         }
     }
 
-    fn identify_prescribed_results(
+    fn analyze_iter_prescribed(
         &self,
         is_forward: bool,
         x: usize,
@@ -118,6 +104,31 @@ impl SudokuSolver {
                 Ok((x_new, y_new)) => {
                     return (false, x_new, y_new, is_forward);
                 }
+                Err(()) => return (true, x, y, is_forward),
+            }
+        }
+    }
+
+    fn analyze_iter_unprescribed(
+        &self,
+        is_forward: bool,
+        x: usize,
+        y: usize,
+        bound: u8,
+        new_cell: &mut Cell,
+        result_puzzle: &mut Puzzle,
+    ) -> (bool, usize, usize, bool) {
+        if self.experiment_valid_cell_value(new_cell, &result_puzzle) {
+            result_puzzle
+                .replace_cell_value_at_position(new_cell.get_position(), new_cell.get_value());
+            match self.next_position(x, y, bound) {
+                Ok((x_new, y_new)) => return (false, x_new, y_new, true),
+                Err(()) => return (true, x, y, is_forward),
+            }
+        } else {
+            result_puzzle.replace_cell_value_at_position(new_cell.get_position(), '0');
+            match self.previous_position(x, y, bound) {
+                Ok((x_new, y_new)) => return (false, x_new, y_new, false),
                 Err(()) => return (true, x, y, is_forward),
             }
         }

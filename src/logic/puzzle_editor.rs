@@ -96,6 +96,8 @@ impl PuzzleEditor for PuzzleEditorImpl {
                     },
                     Err(()) => continue,
                 }
+            } else if input == "FINISH" {
+                break;
             }
 
             match self.step_cursor((x_cursor, y_cursor), CursorDirection::Forward, grid_size) {
@@ -105,6 +107,7 @@ impl PuzzleEditor for PuzzleEditorImpl {
         }
 
         let puzzle: Puzzle = Puzzle::new(grid_size, matrix.clone());
+        println!("\n!! Puzzle submitted !!\n");
         puzzle
     }
 }

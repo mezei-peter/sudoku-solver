@@ -25,6 +25,7 @@ mod model {
 mod ui {}
 
 fn main() {
+    println!("\n>> Sudoku Solver in Rust <<\n");
     let args: Vec<String> = env::args().collect();
     let puzzle_parser: Box<dyn PuzzleParser> = Box::new(PuzzleParserImpl::new());
     let format_converter: Box<dyn FormatConverter> = Box::new(FormatConverterImpl::new());

@@ -1,8 +1,8 @@
 use std::fs;
 
-use crate::model::{puzzle::{Puzzle}, default_puzzle_properties::DefaultProps};
+use crate::model::{default_puzzle_properties::DefaultProps, puzzle::Puzzle};
 
-use super::{puzzle_parser::PuzzleParser, puzzle_solver::{PuzzleSolver}};
+use super::{puzzle_parser::PuzzleParser, puzzle_solver::PuzzleSolver};
 
 pub trait ArgsService {
     fn process(&self, args: &Vec<String>);
@@ -24,6 +24,11 @@ impl ArgsServiceImpl {
         }
     }
 
+    fn print_help(&self) {
+        println!("To use the program, try running it with one of the flags below: \n");
+        println!("  -f <file-path>, --file <file-path> : Specify an input sdm file by entering its file path.\n")
+    }
+
     fn handle_file_arg(&self, file_path: &String) {
         let content =
             fs::read_to_string(file_path).expect(&format!("{} - Invalid file path", file_path));
@@ -31,7 +36,7 @@ impl ArgsServiceImpl {
             return;
         }
         let puzzles: Vec<Puzzle> = self.puzzle_parser.parse_puzzle_file(&content);
-        let solved_puzzles: Vec<Puzzle> = self.puzzle_solver.solve_all_puzzles(&puzzles);
+        let _solved_puzzles: Vec<Puzzle> = self.puzzle_solver.solve_all_puzzles(&puzzles);
     }
 
     fn invalidate_file(&self, file_path: &String, content: &String) -> bool {
@@ -53,20 +58,15 @@ impl ArgsServiceImpl {
 
 impl ArgsService for ArgsServiceImpl {
     fn process(&self, args: &Vec<String>) {
+        let mut has_valid_arg = false;
         for i in 1..args.len() {
-            if args[i].starts_with("--") {
-                if args[i].eq("--file") {
-                    self.handle_file_arg(&args[i + 1]);
-                }
-                continue;
+            if args[i] == "-f" || args[i] == "--file" {
+                self.handle_file_arg(&args[i + 1]);
+                has_valid_arg = true;
             }
-
-            if args[i].starts_with("-") {
-                if args[i].ends_with("f") {
-                    self.handle_file_arg(&args[i + 1]);
-                }
-                continue;
-            }
+        }
+        if !has_valid_arg {
+            self.print_help();
         }
     }
 }

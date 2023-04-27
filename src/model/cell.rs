@@ -38,7 +38,7 @@ impl Cell {
         self.value
     }
 
-    pub fn reset_value(&mut self) {
+    pub fn _reset_value(&mut self) {
         self.value = DefaultProps::EMPTY_VALUE;
     }
 

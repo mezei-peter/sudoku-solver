@@ -116,15 +116,13 @@ impl PuzzleEditor for PuzzleEditorImpl {
                 continue;
             } else {
                 let mut inp_char: char = input.chars().nth(0).unwrap();
-                if inp_char == DefaultProps::EMPTY_SS_VALUE {
+                if inp_char == DefaultProps::EMPTY_SS_VALUE || inp_char == DefaultProps::EMPTY_VALUE {
                     inp_char = DefaultProps::EMPTY_VALUE;
+                    puzzle.prescribe_cell_at_position((x_cursor, y_cursor), false);
+                } else {
+                    puzzle.prescribe_cell_at_position((x_cursor, y_cursor), true);
                 }
                 puzzle.replace_cell_value_at_position((x_cursor, y_cursor), inp_char);
-
-                if inp_char == DefaultProps::EMPTY_VALUE {
-                    puzzle.prescribe_cell_at_position((x_cursor, y_cursor), false);
-                }
-                puzzle.prescribe_cell_at_position((x_cursor, y_cursor), true);
             }
 
             match self.step_cursor((x_cursor, y_cursor), CursorDirection::Forward, grid_size) {

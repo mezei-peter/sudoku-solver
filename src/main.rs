@@ -8,7 +8,7 @@ use logic::{
 
 use crate::logic::{
     arguments_service::ArgsServiceImpl,
-    puzzle_editor::{self, PuzzleEditor, PuzzleEditorImpl},
+    puzzle_editor::{PuzzleEditor, PuzzleEditorImpl},
     puzzle_solver::{PuzzleSolver, SudokuSolver},
 };
 

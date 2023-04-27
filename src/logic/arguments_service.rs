@@ -1,9 +1,9 @@
 use std::{
     fs,
-    io::{stdin, Read},
+    io::{stdin},
 };
 
-use crate::model::{cell::Cell, default_puzzle_properties::DefaultProps, puzzle::Puzzle};
+use crate::model::{default_puzzle_properties::DefaultProps, puzzle::Puzzle};
 
 use super::{puzzle_parser::PuzzleParser, puzzle_solver::PuzzleSolver, puzzle_editor::{PuzzleEditor, self}};
 
@@ -80,6 +80,7 @@ impl ArgsServiceImpl {
                 println!("Invalid input: {}", &s);
             }
         }
+        self.puzzle_solver.solve_all_puzzles(&puzzles);
     }
 }
 

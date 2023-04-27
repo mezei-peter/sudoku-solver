@@ -34,19 +34,21 @@ impl SudokuSolver {
                     break;
                 }
                 if is_forward {
-                    let next_res = self.next_position(x, y, bound);
-                    if next_res.is_err() {
-                        break;
-                    }
-                    (x, y) = next_res.unwrap();
-                    continue;
+                    match self.next_position(x, y, bound) {
+                        Ok((x_new, y_new)) => {
+                            (x, y) = (x_new, y_new);
+                            continue;
+                        },
+                        Err(()) => break
+                    };
                 } else {
-                    let prev_res = self.previous_position(x, y, bound);
-                    if prev_res.is_err() {
-                        break;
+                    match self.previous_position(x, y, bound) {
+                        Ok((x_new, y_new)) => {
+                            (x, y) = (x_new, y_new);
+                            continue;
+                        },
+                        Err(()) => break
                     }
-                    (x, y) = prev_res.unwrap();
-                    continue;
                 }
             }
 
@@ -54,20 +56,22 @@ impl SudokuSolver {
             if self.experiment_valid_cell_value(&mut new_cell, &result_puzzle) {
                 result_puzzle
                     .replace_cell_value_at_position(new_cell.get_position(), new_cell.get_value());
-                let next_res = self.next_position(x, y, bound);
-                if next_res.is_err() {
-                    break;
+                match self.next_position(x, y, bound) {
+                    Ok((x_new, y_new)) => {
+                        (x, y) = (x_new, y_new);
+                        is_forward = true;
+                    },
+                    Err(()) => break
                 }
-                (x, y) = next_res.unwrap();
-                is_forward = true;
             } else {
                 result_puzzle.replace_cell_value_at_position(new_cell.get_position(), '0');
-                let prev_res = self.previous_position(x, y, bound);
-                if prev_res.is_err() {
-                    break;
+                match self.previous_position(x, y, bound) {
+                    Ok((x_new, y_new)) => {
+                        (x, y) = (x_new, y_new);
+                        is_forward = false;
+                    },
+                    Err(()) => break
                 }
-                (x, y) = prev_res.unwrap();
-                is_forward = false;
             }
         }
         result_puzzle

@@ -1,4 +1,4 @@
-use crate::model::{cell::Cell, puzzle::Puzzle};
+use crate::model::{cell::Cell, puzzle::Puzzle, default_puzzle_properties::DefaultProps};
 
 use super::format_converter::FormatConverter;
 
@@ -126,7 +126,7 @@ impl SudokuSolver {
                 Err(()) => return (true, x, y, is_forward),
             }
         } else {
-            result_puzzle.replace_cell_value_at_position(new_cell.get_position(), '0');
+            result_puzzle.replace_cell_value_at_position(new_cell.get_position(), DefaultProps::EMPTY_VALUE);
             match self.previous_position(x, y, bound) {
                 Ok((x_new, y_new)) => return (false, x_new, y_new, false),
                 Err(()) => return (true, x, y, is_forward),

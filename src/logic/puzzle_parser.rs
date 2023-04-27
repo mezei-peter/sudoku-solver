@@ -39,7 +39,7 @@ impl PuzzleParser for PuzzleParserImpl {
             let ch: char = line.chars().nth(position as usize).unwrap();
             let cell: Cell = Cell::new(
                 ch,
-                if ch == '0' { false } else { true },
+                if ch == DefaultProps::EMPTY_VALUE { false } else { true },
                 (row, col),
             );
 

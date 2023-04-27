@@ -24,6 +24,11 @@ impl ArgsServiceImpl {
         }
     }
 
+    fn print_help(&self) {
+        println!("To use the program, try running it with one of the flags below: \n");
+        println!("  -f <file-path>, --file <file-path> : Specify an input sdm file by entering its file path.\n")
+    }
+
     fn handle_file_arg(&self, file_path: &String) {
         let content =
             fs::read_to_string(file_path).expect(&format!("{} - Invalid file path", file_path));
@@ -53,10 +58,15 @@ impl ArgsServiceImpl {
 
 impl ArgsService for ArgsServiceImpl {
     fn process(&self, args: &Vec<String>) {
+        let mut has_valid_arg = false;
         for i in 1..args.len() {
             if args[i] == "-f" || args[i] == "--file" {
                 self.handle_file_arg(&args[i + 1]);
+                has_valid_arg = true;
             }
+        }
+        if !has_valid_arg {
+            self.print_help();
         }
     }
 }

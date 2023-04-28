@@ -18,6 +18,14 @@ enum CursorDirection {
     Back,
 }
 
+enum InputResult {
+    Back((u8, u8)),
+    Next((u8, u8)),
+    Error,
+    ChangeValue((u8, u8)),
+    Finish,
+}
+
 impl PuzzleEditorImpl {
     pub fn new() -> PuzzleEditorImpl {
         PuzzleEditorImpl {
@@ -83,16 +91,41 @@ impl PuzzleEditorImpl {
         println!("  - Type a value like '3' to insert a value.");
     }
 
-    fn handle_value_input(&self, input: &String, puzzle: &mut Puzzle, position: (u8, u8)) {
-        let (x_cursor, y_cursor) = position;
+    fn alter_puzzle_cell(&self, puzzle: &mut Puzzle, position: (u8, u8), input: &String) {
         let mut inp_char: char = input.chars().nth(0).unwrap();
         if inp_char == DefaultProps::EMPTY_SS_VALUE || inp_char == DefaultProps::EMPTY_VALUE {
             inp_char = DefaultProps::EMPTY_VALUE;
-            puzzle.prescribe_cell_at_position((x_cursor, y_cursor), false);
+            puzzle.prescribe_cell_at_position(position, false);
         } else {
-            puzzle.prescribe_cell_at_position((x_cursor, y_cursor), true);
+            puzzle.prescribe_cell_at_position(position, true);
         }
-        puzzle.replace_cell_value_at_position((x_cursor, y_cursor), inp_char);
+        puzzle.replace_cell_value_at_position(position, inp_char);
+    }
+
+    fn determine_input(&self, input: &str, position: (u8, u8), grid_size: u8) -> InputResult {
+        if input == "b" {
+            match self.step_cursor(position, CursorDirection::Back, grid_size) {
+                Ok(new_pos) => return InputResult::Back(new_pos),
+                Err(()) => return InputResult::Back((grid_size - 1, grid_size - 1)),
+            }
+        } else if input.len() == 0 {
+            match self.step_cursor(position, CursorDirection::Forward, grid_size) {
+                Ok(new_pos) => return InputResult::Next(new_pos),
+                Err(()) => return InputResult::Next((0, 0)),
+            }
+        } else if input.len() > 1
+            || !DefaultProps::VALID_INPUTS.contains(&input.chars().nth(0).unwrap())
+        {
+            if input == "FINISH" {
+                return InputResult::Finish;
+            }
+            return InputResult::Error;
+        } else {
+            match self.step_cursor(position, CursorDirection::Forward, grid_size) {
+                Ok(new_pos) => return InputResult::ChangeValue(new_pos),
+                Err(()) => return InputResult::ChangeValue((0, 0)),
+            }
+        }
     }
 }
 
@@ -104,38 +137,24 @@ impl PuzzleEditor for PuzzleEditorImpl {
         let (mut x_cursor, mut y_cursor) = (0_u8, 0_u8);
         loop {
             self.print_puzzle_with_cursor(&puzzle, (x_cursor, y_cursor));
-            let input = InputReaderImpl::read_line();
-            if input == "b" {
-                println!("BACK");
-                match self.step_cursor((x_cursor, y_cursor), CursorDirection::Back, grid_size) {
-                    Ok(pos) => {
-                        (x_cursor, y_cursor) = pos;
-                        continue;
-                    }
-                    Err(()) => {
-                        (x_cursor, y_cursor) = (grid_size - 1, grid_size - 1);
-                        continue;
-                    }
+            let input: String = InputReaderImpl::read_line();
+            match self.determine_input(&input, (x_cursor, y_cursor), grid_size) {
+                InputResult::Back(new_pos) => {
+                    println!("BACK");
+                    (x_cursor, y_cursor) = new_pos;
                 }
-            } else if input == "FINISH" {
-                break;
-            } else if input.len() == 0 {
-                println!("NEXT");
-            } else if input.len() != 1
-                || !DefaultProps::VALID_INPUTS.contains(&input.chars().nth(0).unwrap())
-            {
-                println!("!! ERROR Invalid input: '{}' !!", input);
-                continue;
-            } else {
-                self.handle_value_input(&input, &mut puzzle, (x_cursor, y_cursor));
-            }
-
-            match self.step_cursor((x_cursor, y_cursor), CursorDirection::Forward, grid_size) {
-                Ok(pos) => (x_cursor, y_cursor) = pos,
-                Err(()) => (x_cursor, y_cursor) = (0, 0),
+                InputResult::Next(new_pos) => {
+                    println!("NEXT");
+                    (x_cursor, y_cursor) = new_pos;
+                }
+                InputResult::Error => println!("!! ERROR Invalid input: '{}' !!", input),
+                InputResult::ChangeValue(new_pos) => {
+                    self.alter_puzzle_cell(&mut puzzle, (x_cursor, y_cursor), &input);
+                    (x_cursor, y_cursor) = new_pos;
+                }
+                InputResult::Finish => break,
             }
         }
-
         println!("\n!! Puzzle submitted !!\n");
         puzzle
     }

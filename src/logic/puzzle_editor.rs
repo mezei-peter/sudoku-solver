@@ -70,28 +70,40 @@ impl PuzzleEditorImpl {
             }
         }
     }
+
+    fn print_puzzle_with_cursor(&self, puzzle: &Puzzle, cursor_pos: (u8, u8)) {
+        let mat_str = self
+            .format_converter
+            .puzzle_to_ss(&puzzle, Some(cursor_pos));
+        println!("{}", mat_str);
+        println!("The cursor's position is marked by X. You can: ");
+        println!("  - Type 'FINISH' to submit your puzzle.");
+        println!("  - Press the Enter key to move forward.");
+        println!("  - Type 'b' to move the cursor back.");
+        println!("  - Type a value like '3' to insert a value.");
+    }
+
+    fn handle_value_input(&self, input: &String, puzzle: &mut Puzzle, position: (u8, u8)) {
+        let (x_cursor, y_cursor) = position;
+        let mut inp_char: char = input.chars().nth(0).unwrap();
+        if inp_char == DefaultProps::EMPTY_SS_VALUE || inp_char == DefaultProps::EMPTY_VALUE {
+            inp_char = DefaultProps::EMPTY_VALUE;
+            puzzle.prescribe_cell_at_position((x_cursor, y_cursor), false);
+        } else {
+            puzzle.prescribe_cell_at_position((x_cursor, y_cursor), true);
+        }
+        puzzle.replace_cell_value_at_position((x_cursor, y_cursor), inp_char);
+    }
 }
 
 impl PuzzleEditor for PuzzleEditorImpl {
     fn create(&self) -> Puzzle {
         let grid_size: u8 = DefaultProps::GRID_SIZE;
-        let matrix: Vec<Vec<Cell>> = self.initialize_empty_matrix(grid_size as usize);
-        let mut puzzle: Puzzle = Puzzle::new(grid_size, matrix);
-
+        let mut puzzle: Puzzle =
+            Puzzle::new(grid_size, self.initialize_empty_matrix(grid_size as usize));
         let (mut x_cursor, mut y_cursor) = (0_u8, 0_u8);
         loop {
-            let cell: &Cell = puzzle
-                .get_matrix_cell(x_cursor as usize, y_cursor as usize)
-                .unwrap();
-            let mat_str = self
-                .format_converter
-                .puzzle_to_ss(&puzzle, Some(cell.get_position()));
-            println!("{}", mat_str);
-            println!("The cursor's position is marked by X. You can: ");
-            println!("  - Type 'FINISH' to submit your puzzle.");
-            println!("  - Press the Enter key to move forward.");
-            println!("  - Type 'b' to move the cursor back.");
-            println!("  - Type a value like '3' to insert a value.");
+            self.print_puzzle_with_cursor(&puzzle, (x_cursor, y_cursor));
             let input = InputReaderImpl::read_line();
             if input == "b" {
                 println!("BACK");
@@ -115,14 +127,7 @@ impl PuzzleEditor for PuzzleEditorImpl {
                 println!("!! ERROR Invalid input: '{}' !!", input);
                 continue;
             } else {
-                let mut inp_char: char = input.chars().nth(0).unwrap();
-                if inp_char == DefaultProps::EMPTY_SS_VALUE || inp_char == DefaultProps::EMPTY_VALUE {
-                    inp_char = DefaultProps::EMPTY_VALUE;
-                    puzzle.prescribe_cell_at_position((x_cursor, y_cursor), false);
-                } else {
-                    puzzle.prescribe_cell_at_position((x_cursor, y_cursor), true);
-                }
-                puzzle.replace_cell_value_at_position((x_cursor, y_cursor), inp_char);
+                self.handle_value_input(&input, &mut puzzle, (x_cursor, y_cursor));
             }
 
             match self.step_cursor((x_cursor, y_cursor), CursorDirection::Forward, grid_size) {

@@ -79,7 +79,7 @@ impl PuzzleEditorImpl {
         }
     }
 
-    fn print_puzzle_with_cursor(&self, puzzle: &Puzzle, cursor_pos: (u8, u8)) {
+    fn print_editor(&self, puzzle: &Puzzle, cursor_pos: (u8, u8)) {
         let mat_str = self
             .format_converter
             .puzzle_to_ss(&puzzle, Some(cursor_pos));
@@ -136,7 +136,7 @@ impl PuzzleEditor for PuzzleEditorImpl {
             Puzzle::new(grid_size, self.initialize_empty_matrix(grid_size as usize));
         let (mut x_cursor, mut y_cursor) = (0_u8, 0_u8);
         loop {
-            self.print_puzzle_with_cursor(&puzzle, (x_cursor, y_cursor));
+            self.print_editor(&puzzle, (x_cursor, y_cursor));
             let input: String = InputReaderImpl::read_line();
             match self.determine_input(&input, (x_cursor, y_cursor), grid_size) {
                 InputResult::Back(new_pos) => {
